@@ -1,9 +1,6 @@
 package com.kotofey.jwt_spring_boot.domain.request;
 
 import lombok.*;
-import org.springframework.lang.NonNull;
-
-import java.util.Date;
 
 @Data
 @Builder

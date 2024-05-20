@@ -56,10 +56,10 @@ public class User implements UserDetails {
         2 - phoneNumber
         3 - login
          */
-        if (!email.equals("")){
+        if (!email.isEmpty()){
             return email;
         }
-        if (!phoneNumber.equals("")){
+        if (!phoneNumber.isEmpty()){
             return phoneNumber;
         }
         return login;

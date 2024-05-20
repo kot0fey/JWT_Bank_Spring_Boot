@@ -24,7 +24,7 @@ public class JwtService {
     }
 
     public Map<String, Object> extractExtraClaims(String token){
-        Map allClaims =  extractClaim(token, HashMap::new);
+        Map<String, Object> allClaims =  extractClaim(token, HashMap::new);
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("email", allClaims.get("email"));
         extraClaims.put("phoneNumber", allClaims.get("phoneNumber"));

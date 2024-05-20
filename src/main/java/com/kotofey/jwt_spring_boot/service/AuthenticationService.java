@@ -13,11 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -31,15 +28,15 @@ public class AuthenticationService {
     public AuthenticationResponse register(RegisterRequest request) throws BadRequestException {
         if (
                 (
-                        request.getPhoneNumber().equals("") &&
-                        request.getEmail().equals("")
+                        request.getPhoneNumber().isEmpty() &&
+                        request.getEmail().isEmpty()
                 ) ||
-                request.getPassword().equals("") ||
+                request.getPassword().isEmpty() ||
                 request.getDeposit() < 0F ||
-                request.getDateOfBirth().equals(null) ||
-                request.getFirstName().equals("") ||
-                request.getLastName().equals("") ||
-                request.getMiddleName().equals("")
+                request.getDateOfBirth().isEmpty() ||
+                request.getFirstName().isEmpty() ||
+                request.getLastName().isEmpty() ||
+                request.getMiddleName().isEmpty()
         ) {
             throw new BadRequestException("Bad request");
         }
@@ -58,7 +55,7 @@ public class AuthenticationService {
                     .dateOfBirth(sf.parse(request.getDateOfBirth()))
                     .build();
             userRepository.save(user);
-            Map extraClaims = jwtService.generateExtraClaims(user);
+            Map<String, Object> extraClaims = jwtService.generateExtraClaims(user);
             String jwtToken = jwtService.generateToken(extraClaims, user);
             return AuthenticationResponse.builder()
                     .token(jwtToken)
@@ -77,7 +74,7 @@ public class AuthenticationService {
         );
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        Map extraClaims = jwtService.generateExtraClaims(user);
+        Map<String, Object> extraClaims = jwtService.generateExtraClaims(user);
         String jwtToken = jwtService.generateToken(extraClaims, user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
