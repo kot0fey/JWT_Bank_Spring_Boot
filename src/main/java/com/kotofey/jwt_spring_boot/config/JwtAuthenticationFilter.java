@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -31,15 +32,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwtToken;
-        final String userEmail;
+        final String userName;
         if ((authHeader == null) || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
         jwtToken = authHeader.substring(7); //7 -> "Bearer "
-        userEmail = jwtService.extractUsername(jwtToken);
-        if ((userEmail != null) &&(SecurityContextHolder.getContext().getAuthentication() == null)){
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+//        userEmail = jwtService.extractUsername(jwtToken);
+        Map<String, Object> extraClaims = jwtService.extractExtraClaims(jwtToken);
+
+        if (SecurityContextHolder.getContext().getAuthentication() == null){
+            //todo check if statements
+            if(!extraClaims.get("email").equals("")){
+                userName = (String) extraClaims.get("email");
+            }else if(!extraClaims.get("phoneNumber").equals("")){
+                userName = (String) extraClaims.get("phoneNumber");
+            }else if(!extraClaims.get("login").equals("")){
+                userName = (String) extraClaims.get("login");
+            }else {
+                return;
+            }
+            System.out.println(userName + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
             if(jwtService.isTokenValid(jwtToken, userDetails)){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
@@ -52,6 +67,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
                 filterChain.doFilter(request, response);
             }
+
+
         }
     }
 }

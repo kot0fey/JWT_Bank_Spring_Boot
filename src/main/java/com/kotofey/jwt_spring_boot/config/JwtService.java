@@ -1,5 +1,6 @@
 package com.kotofey.jwt_spring_boot.config;
 
+import com.kotofey.jwt_spring_boot.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -22,10 +23,19 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public Map<String, Object> extractExtraClaims(String token){
+        Map allClaims =  extractClaim(token, HashMap::new);
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("email", allClaims.get("email"));
+        extraClaims.put("phoneNumber", allClaims.get("phoneNumber"));
+        extraClaims.put("login", allClaims.get("login"));
+        return extraClaims;
+    }
+
     public String generateToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails
-    ){
+    ) {
         return Jwts
                 .builder()
                 .claims(extraClaims)
@@ -36,13 +46,21 @@ public class JwtService {
                 .compact();
     }
 
+    public Map<String, Object> generateExtraClaims(User user) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("login", user.getLogin());
+        extraClaims.put("email", user.getEmail());
+        extraClaims.put("phoneNumber", user.getPhoneNumber());
+        return extraClaims;
+    }
+
     public String generateToken(
             UserDetails userDetails
     ) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails){
+    public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUsername(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
@@ -55,7 +73,7 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }

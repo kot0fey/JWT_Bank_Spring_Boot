@@ -1,9 +1,6 @@
 package com.kotofey.jwt_spring_boot.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 
 @Data
 @Builder
@@ -23,24 +21,48 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
+    @Column(unique = true)
+    private String login;
+    @Column(unique = true)
     private String email;
+    @Column(unique = true)
     private String phoneNumber;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private Float deposit;
+    @Column(nullable = false)
     private Float balance;
+    @Column(nullable = false)
     private String lastName;
+    @Column(nullable = false)
     private String firstName;
+    @Column(nullable = false)
     private String middleName;
+    @Column(nullable = false)
+    private Date dateOfBirth;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
     }
 
-    //TODO add phone
+
     @Override
-    public String getUsername() {
-        return email;
+    public String getUsername(){
+        //todo implement everywhere
+        /*
+        1 - email
+        2 - phoneNumber
+        3 - login
+         */
+        if (!email.equals("")){
+            return email;
+        }
+        if (!phoneNumber.equals("")){
+            return phoneNumber;
+        }
+        return login;
     }
 
     @Override
