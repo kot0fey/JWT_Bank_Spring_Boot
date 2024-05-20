@@ -42,7 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Map<String, Object> extraClaims = jwtService.extractExtraClaims(jwtToken);
 
         if (SecurityContextHolder.getContext().getAuthentication() == null){
-            //todo check if statements
             if(!extraClaims.get("email").equals("")){
                 userName = (String) extraClaims.get("email");
             }else if(!extraClaims.get("phoneNumber").equals("")){

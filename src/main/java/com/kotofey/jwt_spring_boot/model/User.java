@@ -50,8 +50,8 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername(){
-        //todo implement everywhere
         /*
+        SEQUENCE
         1 - email
         2 - phoneNumber
         3 - login
