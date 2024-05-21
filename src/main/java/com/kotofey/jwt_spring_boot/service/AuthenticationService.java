@@ -25,7 +25,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) throws BadRequestException {
+    public String register(RegisterRequest request) throws BadRequestException {
         if (
                 (
                         request.getPhoneNumber().isEmpty() &&
@@ -57,15 +57,13 @@ public class AuthenticationService {
             userRepository.save(user);
             Map<String, Object> extraClaims = jwtService.generateExtraClaims(user);
             String jwtToken = jwtService.generateToken(extraClaims, user);
-            return AuthenticationResponse.builder()
-                    .token(jwtToken)
-                    .build();
+            return jwtToken;
         } catch (ParseException e) {
             throw new BadRequestException("Wrong date of birth format");
         }
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public String authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -76,8 +74,6 @@ public class AuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         Map<String, Object> extraClaims = jwtService.generateExtraClaims(user);
         String jwtToken = jwtService.generateToken(extraClaims, user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        return jwtToken;
     }
 }
