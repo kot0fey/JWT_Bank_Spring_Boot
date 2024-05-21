@@ -25,6 +25,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+
     public String register(RegisterRequest request) throws BadRequestException {
         if (
                 (

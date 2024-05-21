@@ -1,5 +1,6 @@
 package com.kotofey.jwt_spring_boot.config;
 
+import com.kotofey.jwt_spring_boot.service.ControllerService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +24,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-//todo get toke from cookies
+
+    //todo get toke from cookies
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
@@ -39,9 +41,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         jwtToken = authHeader.substring(7); //7 -> "Bearer "
         userName = jwtService.getUsername(jwtToken);
-        if (SecurityContextHolder.getContext().getAuthentication() == null){
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-            if(jwtService.isTokenValid(jwtToken, userDetails)){
+            if (jwtService.isTokenValid(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

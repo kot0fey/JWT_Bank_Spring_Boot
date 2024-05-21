@@ -22,27 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-    private final ControllerService controllerService;
     @PostMapping("/register")
-    public ResponseEntity register(
-            @RequestBody RegisterRequest request,
-            HttpServletResponse response
+    public ResponseEntity<String> register(
+            @RequestBody RegisterRequest request
     ) throws BadRequestException {
-        controllerService.setAccessTokenCookie(
-                response,
-                authenticationService.register(request)
-        );
-        return ResponseEntity.ok().body(HttpStatus.OK);
+        return ResponseEntity.ok(authenticationService.register(request));
     }
     @PostMapping("/authenticate")
     public ResponseEntity authenticate(
-            @RequestBody AuthenticationRequest request,
-            HttpServletResponse response
+            @RequestBody AuthenticationRequest request
     ){
-        controllerService.setAccessTokenCookie(
-                response,
-                authenticationService.authenticate(request)
-        );
-        return ResponseEntity.ok().body(HttpStatus.OK);
+        return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 }

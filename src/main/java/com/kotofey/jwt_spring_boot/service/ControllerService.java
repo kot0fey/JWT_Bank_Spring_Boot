@@ -7,24 +7,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ControllerService {
-    public void setAccessTokenCookie(HttpServletResponse response, String token) {
-        Cookie cookie = new Cookie("access_token", token);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        response.addCookie(cookie);
-    }
 
-    public String getTokenFromAuthorizedRequest(HttpServletRequest httpServletRequest) {
-        Cookie[] cookies = httpServletRequest.getCookies();
-        String token = null;
-        //todo test without cookies
-        for (Cookie cookie: cookies){
-            if(cookie.getName().equals("access_token")){
-                token = cookie.getValue();
-                break;
-            }
+    public String getTokenFromAuthorizedRequest(HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        if ((authHeader == null) || !authHeader.startsWith("Bearer ")) {
+            return null;
         }
-        return token;
+        return authHeader.substring(7); //7 -> "Bearer "
     }
 }

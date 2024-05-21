@@ -29,4 +29,9 @@ public class UserController {
         userService.update(updateRequest, token);
         return ResponseEntity.ok().body(HttpStatus.OK);
     }
+
+    @PostMapping("delete/phoneNumber")
+    public ResponseEntity delete(
+            
+    )
 }
