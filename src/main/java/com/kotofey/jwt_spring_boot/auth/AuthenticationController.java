@@ -23,15 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     @PostMapping("/register")
-    public ResponseEntity<String> register(
+    public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request
     ) throws BadRequestException {
         return ResponseEntity.ok(authenticationService.register(request));
     }
-    //todo make tokenentity
     //todo refresh token in update and delete methods
     @PostMapping("/authenticate")
-    public ResponseEntity authenticate(
+    public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request
     ){
         return ResponseEntity.ok(authenticationService.authenticate(request));
