@@ -5,6 +5,7 @@ import com.kotofey.jwt_spring_boot.service.ControllerService;
 import com.kotofey.jwt_spring_boot.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,20 @@ public class UserController {
     }
 
     @PostMapping("delete/phoneNumber")
-    public ResponseEntity delete(
-            
-    )
+    public ResponseEntity deletePhoneNumber(
+            HttpServletRequest httpServletRequest
+    ) throws BadRequestException {
+        String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
+        userService.deletePhoneNumber(token);
+        return ResponseEntity.ok().body(HttpStatus.OK);
+    }
+
+    @PostMapping("delete/email")
+    public ResponseEntity deleteEmail(
+            HttpServletRequest httpServletRequest
+    ) throws BadRequestException {
+        String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
+        userService.deleteEmail(token);
+        return ResponseEntity.ok().body(HttpStatus.OK);
+    }
 }

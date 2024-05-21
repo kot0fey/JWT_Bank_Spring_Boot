@@ -28,6 +28,8 @@ public class AuthenticationController {
     ) throws BadRequestException {
         return ResponseEntity.ok(authenticationService.register(request));
     }
+    //todo make tokenentity
+    //todo refresh token in update and delete methods
     @PostMapping("/authenticate")
     public ResponseEntity authenticate(
             @RequestBody AuthenticationRequest request
