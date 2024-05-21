@@ -95,11 +95,11 @@ public class JwtService {
     public String getUsername(String jwtToken) {
         Map<String, Object> extraClaims = extractExtraClaims(jwtToken);
         if (!extraClaims.get("email").equals("")) {
-            return  (String) extraClaims.get("email");
+            return (String) extraClaims.get("email");
         } else if (!extraClaims.get("phoneNumber").equals("")) {
-            return  (String) extraClaims.get("phoneNumber");
+            return (String) extraClaims.get("phoneNumber");
         } else if (!extraClaims.get("login").equals("")) {
-            return  (String) extraClaims.get("login");
+            return (String) extraClaims.get("login");
         }
         return null;
     }

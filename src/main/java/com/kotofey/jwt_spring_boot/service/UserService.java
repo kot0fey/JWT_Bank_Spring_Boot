@@ -11,8 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
-
 
 @Service
 @RequiredArgsConstructor
@@ -62,9 +60,8 @@ public class UserService {
 
     private User getUserByToken(String token) {
         String username = jwtService.getUsername(token);
-        User user = userRepository.findByUsername(username)
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return user;
     }
 
 
