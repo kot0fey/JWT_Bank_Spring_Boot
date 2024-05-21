@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-
+//todo get toke from cookies
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
