@@ -1,6 +1,7 @@
 package com.kotofey.jwt_spring_boot.controller;
 
 import com.kotofey.jwt_spring_boot.domain.request.UpdateRequest;
+import com.kotofey.jwt_spring_boot.domain.response.AuthenticationResponse;
 import com.kotofey.jwt_spring_boot.service.ControllerService;
 import com.kotofey.jwt_spring_boot.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,30 +23,27 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity update(
+    public ResponseEntity<AuthenticationResponse> update(
             @RequestBody UpdateRequest updateRequest,
             HttpServletRequest httpServletRequest
     ){
         String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
-        userService.update(updateRequest, token);
-        return ResponseEntity.ok().body(HttpStatus.OK);
+        return ResponseEntity.ok(userService.update(updateRequest, token));
     }
 
     @PostMapping("delete/phoneNumber")
-    public ResponseEntity deletePhoneNumber(
+    public ResponseEntity<AuthenticationResponse> deletePhoneNumber(
             HttpServletRequest httpServletRequest
     ) throws BadRequestException {
         String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
-        userService.deletePhoneNumber(token);
-        return ResponseEntity.ok().body(HttpStatus.OK);
+        return ResponseEntity.ok(userService.deletePhoneNumber(token));
     }
 
     @PostMapping("delete/email")
-    public ResponseEntity deleteEmail(
+    public ResponseEntity<AuthenticationResponse> deleteEmail(
             HttpServletRequest httpServletRequest
     ) throws BadRequestException {
         String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
-        userService.deleteEmail(token);
-        return ResponseEntity.ok().body(HttpStatus.OK);
+        return ResponseEntity.ok(userService.deleteEmail(token));
     }
 }
