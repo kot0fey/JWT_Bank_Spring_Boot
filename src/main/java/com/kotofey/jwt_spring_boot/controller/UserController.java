@@ -1,8 +1,11 @@
 package com.kotofey.jwt_spring_boot.controller;
 
 import com.kotofey.jwt_spring_boot.domain.request.UpdateRequest;
+import com.kotofey.jwt_spring_boot.service.ControllerService;
 import com.kotofey.jwt_spring_boot.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,17 +14,19 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final ControllerService controllerService;
     @GetMapping("/hello")
     public ResponseEntity<String> hello(){
         return ResponseEntity.ok("popa");
     }
 
     @PostMapping("/update")
-    public ResponseEntity<String> update(
-            @RequestBody UpdateRequest request
+    public ResponseEntity update(
+            @RequestBody UpdateRequest updateRequest,
+            HttpServletRequest httpServletRequest
     ){
-        return ResponseEntity.ok(
-                userService.update(request)
-        );
+        String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
+        userService.update(updateRequest, token);
+        return ResponseEntity.ok().body(HttpStatus.OK);
     }
 }

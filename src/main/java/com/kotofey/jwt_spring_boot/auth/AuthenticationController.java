@@ -43,6 +43,6 @@ public class AuthenticationController {
                 response,
                 authenticationService.authenticate(request)
         );
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+        return ResponseEntity.ok().body(HttpStatus.OK);
     }
 }

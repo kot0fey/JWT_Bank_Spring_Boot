@@ -23,8 +23,8 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public Map<String, Object> extractExtraClaims(String token){
-        Map<String, Object> allClaims =  extractClaim(token, HashMap::new);
+    public Map<String, Object> extractExtraClaims(String token) {
+        Map<String, Object> allClaims = extractClaim(token, HashMap::new);
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("email", allClaims.get("email"));
         extraClaims.put("phoneNumber", allClaims.get("phoneNumber"));
@@ -81,10 +81,8 @@ public class JwtService {
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parser()
-                .setSigningKey(getSingInKey())//depr
+                .setSigningKey(getSingInKey())
                 .build()
-                //                .parseClaimsJws(token)
-                //        .getBody()
                 .parseSignedClaims(token)
                 .getPayload();
     }
@@ -92,5 +90,17 @@ public class JwtService {
     private Key getSingInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String getUsername(String jwtToken) {
+        Map<String, Object> extraClaims = extractExtraClaims(jwtToken);
+        if (!extraClaims.get("email").equals("")) {
+            return  (String) extraClaims.get("email");
+        } else if (!extraClaims.get("phoneNumber").equals("")) {
+            return  (String) extraClaims.get("phoneNumber");
+        } else if (!extraClaims.get("login").equals("")) {
+            return  (String) extraClaims.get("login");
+        }
+        return null;
     }
 }

@@ -38,18 +38,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         jwtToken = authHeader.substring(7); //7 -> "Bearer "
-        Map<String, Object> extraClaims = jwtService.extractExtraClaims(jwtToken);
-
+        userName = jwtService.getUsername(jwtToken);
         if (SecurityContextHolder.getContext().getAuthentication() == null){
-            if(!extraClaims.get("email").equals("")){
-                userName = (String) extraClaims.get("email");
-            }else if(!extraClaims.get("phoneNumber").equals("")){
-                userName = (String) extraClaims.get("phoneNumber");
-            }else if(!extraClaims.get("login").equals("")){
-                userName = (String) extraClaims.get("login");
-            }else {
-                return;
-            }
             UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
             if(jwtService.isTokenValid(jwtToken, userDetails)){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
