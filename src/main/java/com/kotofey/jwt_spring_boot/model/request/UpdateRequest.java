@@ -1,4 +1,4 @@
-package com.kotofey.jwt_spring_boot.domain.response;
+package com.kotofey.jwt_spring_boot.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
-    private String token;
+public class UpdateRequest {
+    private String email;
+    private String phoneNumber;
 }

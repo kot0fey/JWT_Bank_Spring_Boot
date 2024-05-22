@@ -1,8 +1,9 @@
 package com.kotofey.jwt_spring_boot.service;
 
 import com.kotofey.jwt_spring_boot.config.JwtService;
-import com.kotofey.jwt_spring_boot.domain.request.UpdateRequest;
-import com.kotofey.jwt_spring_boot.domain.response.AuthenticationResponse;
+import com.kotofey.jwt_spring_boot.model.request.SendMoneyRequest;
+import com.kotofey.jwt_spring_boot.model.request.UpdateRequest;
+import com.kotofey.jwt_spring_boot.model.response.AuthenticationResponse;
 import com.kotofey.jwt_spring_boot.mapping.UserMapper;
 import com.kotofey.jwt_spring_boot.model.User;
 import com.kotofey.jwt_spring_boot.model.UserDto;
@@ -20,12 +21,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 
 
 @Service
@@ -108,5 +106,30 @@ public class UserService {
                 pageable
         );
         return userPage.map(u -> userMapper.mapToDto(u));
+    }
+
+    @Transactional
+    public void sendMoney(String token, SendMoneyRequest request) throws BadRequestException {
+        User sender = userRepository.findByUsername(
+                jwtService.getUsername(token)
+        ).orElseThrow(()-> new UsernameNotFoundException("Sender not found"));
+        User receiver = userRepository.findByUsername(
+                request.getUsername()
+        ).orElseThrow(()-> new UsernameNotFoundException("Receiver not found"));
+        if (sender.equals(receiver)){
+            throw new BadRequestException("Bad request");
+        }
+        if (sender.getBalance() < request.getAmount()){
+            throw new BadRequestException("Sender's balance doesn't contains enough money");
+        }
+        sender.setBalance(
+                sender.getBalance() - request.getAmount()
+        );
+        receiver.setBalance(
+                receiver.getBalance() + request.getAmount()
+        );
+        userRepository.saveAll(
+                List.of(sender, receiver)
+        );
     }
 }

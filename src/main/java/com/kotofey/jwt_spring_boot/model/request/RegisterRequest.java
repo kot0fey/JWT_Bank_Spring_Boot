@@ -1,4 +1,4 @@
-package com.kotofey.jwt_spring_boot.domain.request;
+package com.kotofey.jwt_spring_boot.model.request;
 
 import lombok.*;
 

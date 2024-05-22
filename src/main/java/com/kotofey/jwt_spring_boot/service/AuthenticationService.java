@@ -1,9 +1,9 @@
 package com.kotofey.jwt_spring_boot.service;
 
 import com.kotofey.jwt_spring_boot.config.JwtService;
-import com.kotofey.jwt_spring_boot.domain.request.AuthenticationRequest;
-import com.kotofey.jwt_spring_boot.domain.request.RegisterRequest;
-import com.kotofey.jwt_spring_boot.domain.response.AuthenticationResponse;
+import com.kotofey.jwt_spring_boot.model.request.AuthenticationRequest;
+import com.kotofey.jwt_spring_boot.model.request.RegisterRequest;
+import com.kotofey.jwt_spring_boot.model.response.AuthenticationResponse;
 import com.kotofey.jwt_spring_boot.model.User;
 import com.kotofey.jwt_spring_boot.repository.UserRepository;
 import com.kotofey.jwt_spring_boot.utils.DateUtil;
@@ -16,10 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 @Service

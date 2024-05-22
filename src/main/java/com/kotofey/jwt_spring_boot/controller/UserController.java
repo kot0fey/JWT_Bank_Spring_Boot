@@ -1,25 +1,20 @@
 package com.kotofey.jwt_spring_boot.controller;
 
-import com.kotofey.jwt_spring_boot.domain.request.UpdateRequest;
-import com.kotofey.jwt_spring_boot.domain.response.AuthenticationResponse;
-import com.kotofey.jwt_spring_boot.model.User;
+import com.kotofey.jwt_spring_boot.model.request.SendMoneyRequest;
+import com.kotofey.jwt_spring_boot.model.request.UpdateRequest;
+import com.kotofey.jwt_spring_boot.model.response.AuthenticationResponse;
 import com.kotofey.jwt_spring_boot.model.UserDto;
-import com.kotofey.jwt_spring_boot.repository.UserRepository;
 import com.kotofey.jwt_spring_boot.service.ControllerService;
 import com.kotofey.jwt_spring_boot.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -80,5 +75,15 @@ public class UserController {
     ) throws BadRequestException {
         String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
         return ResponseEntity.ok(userService.deleteEmail(token));
+    }
+
+    @PostMapping("sendMoney")
+    public ResponseEntity sendMoney(
+            @RequestBody SendMoneyRequest request,
+            HttpServletRequest httpServletRequest
+    ) throws BadRequestException {
+        String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
+        userService.sendMoney(token, request);
+        return ResponseEntity.ok().body(HttpStatus.OK);
     }
 }

@@ -1,8 +1,8 @@
 package com.kotofey.jwt_spring_boot.auth;
 
-import com.kotofey.jwt_spring_boot.domain.request.AuthenticationRequest;
-import com.kotofey.jwt_spring_boot.domain.request.RegisterRequest;
-import com.kotofey.jwt_spring_boot.domain.response.AuthenticationResponse;
+import com.kotofey.jwt_spring_boot.model.request.AuthenticationRequest;
+import com.kotofey.jwt_spring_boot.model.request.RegisterRequest;
+import com.kotofey.jwt_spring_boot.model.response.AuthenticationResponse;
 import com.kotofey.jwt_spring_boot.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
