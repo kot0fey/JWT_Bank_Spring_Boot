@@ -1,9 +1,9 @@
 package com.kotofey.jwt_spring_boot.controller;
 
-import com.kotofey.jwt_spring_boot.model.request.SendMoneyRequest;
-import com.kotofey.jwt_spring_boot.model.request.UpdateRequest;
-import com.kotofey.jwt_spring_boot.model.response.AuthenticationResponse;
-import com.kotofey.jwt_spring_boot.model.UserDto;
+import com.kotofey.jwt_spring_boot.domain.request.SendMoneyRequest;
+import com.kotofey.jwt_spring_boot.domain.request.UpdateRequest;
+import com.kotofey.jwt_spring_boot.domain.response.AuthenticationResponse;
+import com.kotofey.jwt_spring_boot.domain.response.UserDto;
 import com.kotofey.jwt_spring_boot.service.ControllerService;
 import com.kotofey.jwt_spring_boot.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,7 +1,7 @@
 package com.kotofey.jwt_spring_boot.mapping;
 
 import com.kotofey.jwt_spring_boot.model.User;
-import com.kotofey.jwt_spring_boot.model.UserDto;
+import com.kotofey.jwt_spring_boot.domain.response.UserDto;
 import org.springframework.stereotype.Component;
 
 @Component

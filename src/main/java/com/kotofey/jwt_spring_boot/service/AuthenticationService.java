@@ -1,9 +1,9 @@
 package com.kotofey.jwt_spring_boot.service;
 
 import com.kotofey.jwt_spring_boot.config.JwtService;
-import com.kotofey.jwt_spring_boot.model.request.AuthenticationRequest;
-import com.kotofey.jwt_spring_boot.model.request.RegisterRequest;
-import com.kotofey.jwt_spring_boot.model.response.AuthenticationResponse;
+import com.kotofey.jwt_spring_boot.domain.request.AuthenticationRequest;
+import com.kotofey.jwt_spring_boot.domain.request.RegisterRequest;
+import com.kotofey.jwt_spring_boot.domain.response.AuthenticationResponse;
 import com.kotofey.jwt_spring_boot.model.User;
 import com.kotofey.jwt_spring_boot.repository.UserRepository;
 import com.kotofey.jwt_spring_boot.utils.DateUtil;

@@ -1,4 +1,4 @@
-package com.kotofey.jwt_spring_boot.model.request;
+package com.kotofey.jwt_spring_boot.domain.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

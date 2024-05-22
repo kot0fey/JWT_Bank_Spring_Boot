@@ -3,7 +3,6 @@ package com.kotofey.jwt_spring_boot.repository;
 import com.kotofey.jwt_spring_boot.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -46,15 +43,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Modifying
     @Query("""
-            update User u 
-            set u.balance = (u.balance * 1.05) 
+            update User u
+            set u.balance = (u.balance * 1.05)\s
             where u.balance < (u.deposit * 2.07)
             """)
     void scheduledBalanceIncrease();
-
-
-
-
 
     default Optional<User> findByUsername(String username) {
         Optional<User> user = findByEmail(username);

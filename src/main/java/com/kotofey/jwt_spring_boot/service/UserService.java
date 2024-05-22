@@ -1,12 +1,12 @@
 package com.kotofey.jwt_spring_boot.service;
 
 import com.kotofey.jwt_spring_boot.config.JwtService;
-import com.kotofey.jwt_spring_boot.model.request.SendMoneyRequest;
-import com.kotofey.jwt_spring_boot.model.request.UpdateRequest;
-import com.kotofey.jwt_spring_boot.model.response.AuthenticationResponse;
+import com.kotofey.jwt_spring_boot.domain.request.SendMoneyRequest;
+import com.kotofey.jwt_spring_boot.domain.request.UpdateRequest;
+import com.kotofey.jwt_spring_boot.domain.response.AuthenticationResponse;
 import com.kotofey.jwt_spring_boot.mapping.UserMapper;
 import com.kotofey.jwt_spring_boot.model.User;
-import com.kotofey.jwt_spring_boot.model.UserDto;
+import com.kotofey.jwt_spring_boot.domain.response.UserDto;
 import com.kotofey.jwt_spring_boot.repository.UserRepository;
 import com.kotofey.jwt_spring_boot.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +19,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.List;
-import java.util.concurrent.CancellationException;
 
 
 @Service
@@ -105,10 +105,10 @@ public class UserService {
                 email,
                 pageable
         );
-        return userPage.map(u -> userMapper.mapToDto(u));
+        return userPage.map(userMapper::mapToDto);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void sendMoney(String token, SendMoneyRequest request) throws BadRequestException {
         User sender = userRepository.findByUsername(
                 jwtService.getUsername(token)
