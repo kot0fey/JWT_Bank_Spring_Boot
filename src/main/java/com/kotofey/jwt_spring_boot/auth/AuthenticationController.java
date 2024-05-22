@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -22,7 +24,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request
-    ) throws BadRequestException {
+    ) throws BadRequestException, ParseException {
         return ResponseEntity.ok(authenticationService.register(request));
     }
 

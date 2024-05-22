@@ -6,6 +6,7 @@ import com.kotofey.jwt_spring_boot.domain.request.RegisterRequest;
 import com.kotofey.jwt_spring_boot.domain.response.AuthenticationResponse;
 import com.kotofey.jwt_spring_boot.model.User;
 import com.kotofey.jwt_spring_boot.repository.UserRepository;
+import com.kotofey.jwt_spring_boot.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,8 +14,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -24,9 +29,10 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final DateUtil dateUtil;
 
 
-    public AuthenticationResponse register(RegisterRequest request) throws BadRequestException {
+    public AuthenticationResponse register(RegisterRequest request) throws BadRequestException, ParseException {
         if (
                 (
                         request.getPhoneNumber().isEmpty() &&
@@ -41,29 +47,25 @@ public class AuthenticationService {
         ) {
             throw new BadRequestException("Bad request");
         }
-        try {
-            SimpleDateFormat sf = new SimpleDateFormat("dd.MM.yyyy");
-            User user = User.builder()
-                    .login(request.getLogin())
-                    .email(request.getEmail())
-                    .phoneNumber(request.getPhoneNumber())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .deposit(request.getDeposit())
-                    .balance(request.getDeposit())
-                    .lastName(request.getLastName())
-                    .firstName(request.getFirstName())
-                    .middleName(request.getMiddleName())
-                    .dateOfBirth(sf.parse(request.getDateOfBirth()))
-                    .build();
-            userRepository.save(user);
-            Map<String, Object> extraClaims = jwtService.generateExtraClaims(user);
-            String jwtToken = jwtService.generateToken(extraClaims, user);
-            return AuthenticationResponse.builder()
-                    .token(jwtToken)
-                    .build();
-        } catch (ParseException e) {
-            throw new BadRequestException("Wrong date of birth format");
-        }
+
+        User user = User.builder()
+                .login(request.getLogin())
+                .email(request.getEmail())
+                .phoneNumber(request.getPhoneNumber())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .deposit(request.getDeposit())
+                .balance(request.getDeposit())
+                .lastName(request.getLastName())
+                .firstName(request.getFirstName())
+                .middleName(request.getMiddleName())
+                .dateOfBirth(dateUtil.stringToLocalDate(request.getDateOfBirth()))
+                .build();
+        userRepository.save(user);
+        Map<String, Object> extraClaims = jwtService.generateExtraClaims(user);
+        String jwtToken = jwtService.generateToken(extraClaims, user);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
