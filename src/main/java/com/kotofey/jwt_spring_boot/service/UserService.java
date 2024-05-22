@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +30,17 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@EnableScheduling
 public class UserService {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final DateUtil dateUtil;
     private final UserMapper userMapper;
+
+    @Scheduled(fixedRate = 1000 * 60)
+    public void scheduledBalanceIncrease() {
+        userRepository.scheduledBalanceIncrease();
+    }
 
     @Transactional
     public AuthenticationResponse update(UpdateRequest request, String token) {
