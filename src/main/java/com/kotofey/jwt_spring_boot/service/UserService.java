@@ -15,12 +15,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.util.List;
@@ -109,18 +111,18 @@ public class UserService {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void sendMoney(String token, SendMoneyRequest request) throws BadRequestException {
+    public void sendMoney(String token, SendMoneyRequest request) {
         User sender = userRepository.findByUsername(
                 jwtService.getUsername(token)
-        ).orElseThrow(()-> new UsernameNotFoundException("Sender not found"));
+        ).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sender not found"));
         User receiver = userRepository.findByUsername(
                 request.getUsername()
-        ).orElseThrow(()-> new UsernameNotFoundException("Receiver not found"));
-        if (sender.equals(receiver)){
-            throw new BadRequestException("Bad request");
+        ).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receiver not found"));
+        if (sender.equals(receiver)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sender and receiver are equal");
         }
-        if (sender.getBalance() < request.getAmount()){
-            throw new BadRequestException("Sender's balance doesn't contains enough money");
+        if (sender.getBalance() < request.getAmount()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sender's balance doesn't contains enough money");
         }
         sender.setBalance(
                 sender.getBalance() - request.getAmount()

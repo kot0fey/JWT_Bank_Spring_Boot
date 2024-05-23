@@ -9,11 +9,13 @@ import com.kotofey.jwt_spring_boot.repository.UserRepository;
 import com.kotofey.jwt_spring_boot.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class AuthenticationService {
     private final DateUtil dateUtil;
 
 
-    public AuthenticationResponse register(RegisterRequest request) throws BadRequestException, ParseException {
+    public AuthenticationResponse register(RegisterRequest request) {
         if (
                 (
                         request.getPhoneNumber().isEmpty() &&
@@ -41,9 +43,8 @@ public class AuthenticationService {
                 request.getLastName().isEmpty() ||
                 request.getMiddleName().isEmpty()
         ) {
-            throw new BadRequestException("Bad request");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad request");
         }
-
         User user = User.builder()
                 .login(request.getLogin())
                 .email(request.getEmail())
@@ -72,7 +73,7 @@ public class AuthenticationService {
                 )
         );
         User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Map<String, Object> extraClaims = jwtService.generateExtraClaims(user);
         String jwtToken = jwtService.generateToken(extraClaims, user);
         return AuthenticationResponse.builder()

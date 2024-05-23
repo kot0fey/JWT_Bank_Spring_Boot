@@ -49,19 +49,18 @@ public class User implements UserDetails {
         return null;
     }
 
-
     @Override
-    public String getUsername(){
+    public String getUsername() {
         /*
         SEQUENCE
         1 - email
         2 - phoneNumber
         3 - login
          */
-        if (!email.isEmpty()){
+        if (!email.isEmpty()) {
             return email;
         }
-        if (!phoneNumber.isEmpty()){
+        if (!phoneNumber.isEmpty()) {
             return phoneNumber;
         }
         return login;
