@@ -82,7 +82,7 @@ public class UserController {
     public ResponseEntity<String> sendMoney(
             @RequestBody SendMoneyRequest request,
             HttpServletRequest httpServletRequest
-    ) throws BadRequestException {
+    ) {
         logger.info("Request: /api/v1/user/sendMoney");
         String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
         userService.sendMoney(token, request);

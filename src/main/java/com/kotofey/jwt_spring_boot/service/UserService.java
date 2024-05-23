@@ -96,7 +96,7 @@ public class UserService {
             String lastName,
             String middleName,
             String email,
-            Integer limit, Integer offset) throws ParseException {
+            Integer limit, Integer offset) {
         Pageable pageable = PageRequest.of(offset, limit, Sort.by("id"));
         Page<User> userPage = userRepository.findByFilter(
                 dateUtil.stringToLocalDate(dateOfBirth),
