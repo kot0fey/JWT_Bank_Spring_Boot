@@ -9,8 +9,9 @@ import com.kotofey.jwt_spring_boot.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +23,7 @@ import java.text.ParseException;
 public class UserController {
     private final UserService userService;
     private final ControllerService controllerService;
-
-    @GetMapping("/hello")
-    public ResponseEntity<String> hello() {
-        return ResponseEntity.ok("popa");
-    }
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/filter")
     public ResponseEntity<Page<UserDto>> filter(
@@ -39,6 +36,7 @@ public class UserController {
             @RequestParam(value = "limit", defaultValue = "5") Integer limit,
             @RequestParam(value = "offset", defaultValue = "0") Integer offset
     ) throws ParseException {
+        logger.info("Request: /api/v1/user/filter");
        return ResponseEntity.ok(
                userService.getUsersWithFilter(
                        dateOfBirth,
@@ -57,6 +55,7 @@ public class UserController {
             @RequestBody UpdateRequest updateRequest,
             HttpServletRequest httpServletRequest
     ) {
+        logger.info("Request: /api/v1/user/update");
         String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
         return ResponseEntity.ok(userService.update(updateRequest, token));
     }
@@ -65,6 +64,7 @@ public class UserController {
     public ResponseEntity<AuthenticationResponse> deletePhoneNumber(
             HttpServletRequest httpServletRequest
     ) throws BadRequestException {
+        logger.info("Request: /api/v1/user/delete/phoneNumber");
         String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
         return ResponseEntity.ok(userService.deletePhoneNumber(token));
     }
@@ -73,17 +73,19 @@ public class UserController {
     public ResponseEntity<AuthenticationResponse> deleteEmail(
             HttpServletRequest httpServletRequest
     ) throws BadRequestException {
+        logger.info("Request: /api/v1/user/delete/email");
         String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
         return ResponseEntity.ok(userService.deleteEmail(token));
     }
 
-    @PostMapping("sendMoney")
-    public ResponseEntity sendMoney(
+    @PostMapping("/sendMoney")
+    public ResponseEntity<String> sendMoney(
             @RequestBody SendMoneyRequest request,
             HttpServletRequest httpServletRequest
     ) throws BadRequestException {
+        logger.info("Request: /api/v1/user/sendMoney");
         String token = controllerService.getTokenFromAuthorizedRequest(httpServletRequest);
         userService.sendMoney(token, request);
-        return ResponseEntity.ok().body(HttpStatus.OK);
+        return ResponseEntity.ok("OK");
     }
 }
