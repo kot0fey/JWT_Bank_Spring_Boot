@@ -35,7 +35,7 @@ public class UserController {
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "limit", defaultValue = "5") Integer limit,
             @RequestParam(value = "offset", defaultValue = "0") Integer offset
-    ) throws ParseException {
+    ) {
         logger.info("Request: /api/v1/user/filter");
         return ResponseEntity.ok(
                 userService.getUsersWithFilter(
