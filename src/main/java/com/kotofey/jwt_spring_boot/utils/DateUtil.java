@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +17,7 @@ public class DateUtil {
         try {
             //"dd.MM.yyyy"
             List<Integer> dateList = Arrays.stream(string.split("\\."))
-                    .map(s -> Integer.parseInt(s))
+                    .map(Integer::parseInt)
                     .toList();
             return LocalDate.of(
                     dateList.get(2),

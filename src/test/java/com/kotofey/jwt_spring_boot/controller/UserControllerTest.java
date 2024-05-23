@@ -4,8 +4,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.jayway.jsonpath.JsonPath;
-import com.kotofey.jwt_spring_boot.service.ControllerService;
-import com.kotofey.jwt_spring_boot.service.UserService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -39,17 +37,18 @@ public class UserControllerTest {
     void createUsers() throws Exception {
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                 "    \"login\": \"login1\",\n" +
-                                 "    \"email\": \"email1\",\n" +
-                                 "    \"phoneNumber\": \"phoneNumber1\",\n" +
-                                 "    \"password\": \"password\",\n" +
-                                 "    \"deposit\": 100,\n" +
-                                 "    \"lastName\": \"lastName\",\n" +
-                                 "    \"firstName\": \"firstName\",\n" +
-                                 "    \"middleName\": \"middleName\",\n" +
-                                 "    \"dateOfBirth\": \"09.07.2002\"\n" +
-                                 "}"))
+                        .content("""
+                                {
+                                    "login": "login1",
+                                    "email": "email1",
+                                    "phoneNumber": "phoneNumber1",
+                                    "password": "password",
+                                    "deposit": 100,
+                                    "lastName": "lastName",
+                                    "firstName": "firstName",
+                                    "middleName": "middleName",
+                                    "dateOfBirth": "09.07.2002"
+                                }"""))
                 .andExpect(
                         status().isOk()
                 )
@@ -59,17 +58,18 @@ public class UserControllerTest {
         jwtToken = JsonPath.read(jwtToken, "$.token");
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                 "    \"login\": \"login2\",\n" +
-                                 "    \"email\": \"email2\",\n" +
-                                 "    \"phoneNumber\": \"phoneNumber2\",\n" +
-                                 "    \"password\": \"password\",\n" +
-                                 "    \"deposit\": 100,\n" +
-                                 "    \"lastName\": \"lastName\",\n" +
-                                 "    \"firstName\": \"firstName\",\n" +
-                                 "    \"middleName\": \"middleName\",\n" +
-                                 "    \"dateOfBirth\": \"09.07.2002\"\n" +
-                                 "}"))
+                        .content("""
+                                {
+                                    "login": "login2",
+                                    "email": "email2",
+                                    "phoneNumber": "phoneNumber2",
+                                    "password": "password",
+                                    "deposit": 100,
+                                    "lastName": "lastName",
+                                    "firstName": "firstName",
+                                    "middleName": "middleName",
+                                    "dateOfBirth": "09.07.2002"
+                                }"""))
                 .andExpect(
                         status().isOk()
                 );
@@ -79,10 +79,11 @@ public class UserControllerTest {
     void sendMoney() throws Exception {
         mockMvc.perform(post("/api/v1/user/sendMoney")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                 "    \"username\" : \"login2\",\n" +
-                                 "    \"amount\" : 100.0\n" +
-                                 "}")
+                        .content("""
+                                {
+                                    "username" : "login2",
+                                    "amount" : 100.0
+                                }""")
                         .header("Authorization", "Bearer " + jwtToken)
                 )
                 .andExpect(
@@ -94,10 +95,11 @@ public class UserControllerTest {
     void sendMoneyTooMuch() throws Exception {
         mockMvc.perform(post("/api/v1/user/sendMoney")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                 "    \"username\" : \"login2\",\n" +
-                                 "    \"amount\" : 10000.0\n" +
-                                 "}")
+                        .content("""
+                                {
+                                    "username" : "login2",
+                                    "amount" : 10000.0
+                                }""")
                         .header("Authorization", "Bearer " + jwtToken)
                 )
                 .andExpect(
@@ -109,10 +111,11 @@ public class UserControllerTest {
     void sendMoneyToNonExistentUser() throws Exception {
         mockMvc.perform(post("/api/v1/user/sendMoney")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                 "    \"username\" : \"no such login\",\n" +
-                                 "    \"amount\" : 10000.0\n" +
-                                 "}")
+                        .content("""
+                                {
+                                    "username" : "no such login",
+                                    "amount" : 10000.0
+                                }""")
                         .header("Authorization", "Bearer " + jwtToken)
                 )
                 .andExpect(
@@ -124,10 +127,11 @@ public class UserControllerTest {
     void sendMoneyToYourself() throws Exception {
         mockMvc.perform(post("/api/v1/user/sendMoney")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                 "    \"username\" : \"login1\",\n" +
-                                 "    \"amount\" : 10000.0\n" +
-                                 "}")
+                        .content("""
+                                {
+                                    "username" : "login1",
+                                    "amount" : 10000.0
+                                }""")
                         .header("Authorization", "Bearer " + jwtToken)
                 )
                 .andExpect(
@@ -135,10 +139,4 @@ public class UserControllerTest {
                 );
     }
 
-    /*
-    OK
-    too much
-    non existent user
-    to yourself
-     */
 }
